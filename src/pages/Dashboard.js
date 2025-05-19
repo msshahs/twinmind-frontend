@@ -162,7 +162,7 @@ function Dashboard() {
                     onClick={handleCreateMeeting}
                     className="bg-twinmind text-white px-6 py-3 rounded-lg shadow hover:bg-orange-700 transition text-sm font-semibold"
                 >
-                    🚀 Start New Meeting
+                    Start New Meeting
                 </button>
 
                 <button
