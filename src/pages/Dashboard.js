@@ -157,15 +157,23 @@ function Dashboard() {
                 </div>
             </div>
 
-            {/* Start Meeting */}
-            <div className="mb-6">
+            <div className="mb-6 flex flex-wrap items-center gap-4">
                 <button
                     onClick={handleCreateMeeting}
-                    className="bg-twinmind text-white px-6 py-3 rounded-md shadow hover:bg-orange-700 transition"
+                    className="bg-twinmind text-white px-6 py-3 rounded-lg shadow hover:bg-orange-700 transition text-sm font-semibold"
                 >
-                    Start New Meeting
+                    🚀 Start New Meeting
+                </button>
+
+                <button
+                    onClick={() => navigate("/calendar")}
+                    className="flex items-center gap-2 text-sm text-twinmind font-semibold hover:underline hover:text-orange-700 transition"
+                >
+                    <span>📅</span>
+                    <span>Google Calendar</span>
                 </button>
             </div>
+
 
             {/* Meeting List */}
             <div className="space-y-4">

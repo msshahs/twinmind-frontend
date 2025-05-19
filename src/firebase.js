@@ -14,5 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+provider.addScope("https://www.googleapis.com/auth/calendar");
+
 
 export { auth, provider };

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import twinLogo from "../assets/twin.svg"; // your brand logo
 import { ChevronDown } from "lucide-react";
 import { redirectIfLoggedIn } from "../utils/checkJwtExpiry";
+import { GoogleAuthProvider } from "firebase/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -40,6 +41,11 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
 
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const calendarAccessToken = credential.accessToken;
+      console.log('calendarAccessToken: ', calendarAccessToken);
+      localStorage.setItem("calendar_token", calendarAccessToken);
+
       const res = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,6 +65,7 @@ function Login() {
       toast.error("Login failed");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-orange-50 to-orange-100 px-4">
