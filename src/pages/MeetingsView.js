@@ -93,23 +93,56 @@ function MeetingView() {
         fetchTranscript();
     }, [id]);
 
+
+
+    // const fetchTranscript = async () => {
+    //     try {
+    //         setLoading(true)
+    //         const token = localStorage.getItem("token");
+    //         const res = await fetch(`${API_BASE_URL}/meetings/${id}`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         const data = await res.json();
+    //         if (data.success && data.meeting.transcript) {
+    //             setTitle(data.meeting.title);
+    //             setTranscript(data.meeting.transcript.split("\n"));
+    //             setSuggestedQuestions(data.meeting.questions || []);
+    //         }
+    //     } catch (error) {
+    //         console.error("Fetch Transcript error:", error);
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // };
     const fetchTranscript = async () => {
         try {
-            setLoading(true)
+            setLoading(true);
             const token = localStorage.getItem("token");
+
             const res = await fetch(`${API_BASE_URL}/meetings/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+
             const data = await res.json();
+
             if (data.success && data.meeting.transcript) {
-                setTitle(data.meeting.title);
-                setTranscript(data.meeting.transcript.split("\n"));
-                setSuggestedQuestions(data.meeting.questions || []);
+                const meeting = data.meeting;
+                setTranscript(meeting.transcript.split("\n"));
+                setSuggestedQuestions(meeting.questions || []);
+
+                const transcriptLength = meeting.transcript.replace(/[\s\n]/g, "").length;
+
+                if (meeting.title === "Untitled Meeting" && transcriptLength > 30) {
+                    setTitle("Generating AI title...");
+                } else {
+                    setTitle(meeting.title);
+                }
             }
-        } catch (error) {
-            console.error("Fetch Transcript error:", error);
+        } catch (err) {
+            console.error("Fetch meeting error:", err);
+            toast.error("Failed to fetch meeting.");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -151,6 +184,9 @@ function MeetingView() {
             const data = await res.json();
             if (data.success && data.transcript) {
                 setTranscript((prev) => [...prev, `📝 ${data.transcript}`]);
+                if (title == "Untitled Meeting" || title == "Generating AI title...") {
+                    setTitle(data.title)
+                }
             }
         } catch (err) {
             console.warn("Offline: Saving chunk to local DB");

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import twinmindLogo from "../assets/twin.svg"; // Add this logo to your assets
 import { checkJwtAndRedirect } from "../utils/checkJwtExpiry";
 import { useLoader } from "../context/LoaderContext";
-
+import avtar from '../assets/default-avtar.png'
 function Dashboard() {
     const navigate = useNavigate();
     const [meetings, setMeetings] = useState([]);
@@ -135,7 +135,7 @@ function Dashboard() {
                 <img src={twinmindLogo} alt="TwinMind" className="h-10" />
                 <div className="relative group">
                     <img
-                        src={user?.picture || "/default-avatar.png"}
+                        src={user?.picture || avtar}
                         alt="Profile"
                         className="w-12 h-12 rounded-full object-cover cursor-pointer border-2 border-twinmind"
                     />

@@ -7,12 +7,14 @@ import twinLogo from "../assets/twin.svg"; // your brand logo
 import { ChevronDown } from "lucide-react";
 import { redirectIfLoggedIn } from "../utils/checkJwtExpiry";
 import { GoogleAuthProvider } from "firebase/auth";
+import { useLoader } from "../context/LoaderContext";
 
 function Login() {
   const navigate = useNavigate();
   const [highlight, setHighlight] = useState("Memory Vault");
   const [showDropdown, setShowDropdown] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const { setLoading } = useLoader();
 
   const buzzwords = [
     "Memory Vault",
@@ -40,12 +42,12 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const calendarAccessToken = credential.accessToken;
       console.log('calendarAccessToken: ', calendarAccessToken);
       localStorage.setItem("calendar_token", calendarAccessToken);
 
+      setLoading(true)
       const res = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,6 +65,8 @@ function Login() {
     } catch (err) {
       console.error("Login error:", err);
       toast.error("Login failed");
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -126,7 +130,7 @@ function Login() {
             </button>
             <button
               onClick={() =>
-                window.open("https://www.youtube.com/watch?v=EPvCkJ2B0iA", "_blank")
+                window.open("https://drive.google.com/file/d/1-Dkg4MOtCouz18gDvvQHsOmFQ1jL-GIG/view?usp=drive_link", "_blank")
               }
               className="border border-twinmind text-twinmind px-6 py-3 rounded-md text-lg hover:bg-twinmind hover:text-white transition"
             >
